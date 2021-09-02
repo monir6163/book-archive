@@ -17,6 +17,7 @@ const toggleSearchResult = displayStyle =>{
 // search btn function
 const loadBook = () => {
     const searchField = searchInput.value;
+    // error handaling
     if(searchField === ""){
         errorMessage.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Please input Your Book Name!</strong>
@@ -32,7 +33,7 @@ const loadBook = () => {
     countData.innerHTML = "";
     bookContainer.innerHTML = "";
     searchInput.value = "";
-    const url = `http://openlibrary.org/search.json?q=${searchField}`;
+    const url = `https://openlibrary.org/search.json?q=${searchField}`;
     fetch(url)
     .then(res => res.json())
     .then(data => displayBook(data, data.docs))
@@ -54,17 +55,17 @@ const displayBook = (data , books) => {
     }
     // foreach loop
     books.forEach(book => {
-        console.log(book);
+        console.log();
         const imgUrl = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
         const div = document.createElement('div');
         div.classList.add('col');
         div.innerHTML = `
         <div class="card h-100">
-           <img src="${imgUrl ? imgUrl : ''}" class="card-img-top" style="height:300px" alt="${book.title}" />
+           <img src="${imgUrl ? imgUrl : 'N/A'}" class="card-img-top" style="height:300px" alt="${book.title}" />
             <h6 class="card-title p-3"><span class="fw-bold text-info fs-5">Name :</span> ${book.title}</h6>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item" style = "font-size:1rem; font-weight:500"><span class="fw-bold text-info fs-5">Author :</span> ${book.author_name}</li>
-                <li class="list-group-item" style = "font-size:1rem; font-weight:500"><span class="fw-bold text-info fs-5">Publisher :</span> ${book.publisher ? book.publisher : 'N/A'}</li>
+                <li class="list-group-item" style = "font-size:1rem; font-weight:500"><span class="fw-bold text-info fs-5">Author :</span> ${book.author_name?book.author_name[0]:'N/A'}</li>
+                <li class="list-group-item" style = "font-size:1rem; font-weight:500"><span class="fw-bold text-info fs-5">Publisher :</span> ${book.publisher?book.publisher[0]:'N/A'}</li>
                 <li class="list-group-item" style = "font-size:1rem; font-weight:500"><span class="fw-bold text-info fs-5">First Publish Year :</span> ${book.first_publish_year ? book.first_publish_year : 'N/A'}</li>
             </ul>
         </div>`;

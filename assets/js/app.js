@@ -53,7 +53,6 @@ const displayBook = (data , books) => {
     }
     // foreach loop
     books.forEach(book => {
-        console.log();
         const imgUrl = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
         const div = document.createElement('div');
         div.classList.add('col');

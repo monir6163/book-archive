@@ -7,6 +7,13 @@ const countData = document.getElementById('count');
 const toggleSpinner = displayStyle =>{
     document.getElementById('spinner-container').style.display = displayStyle;
 }
+// add  toggleSearchResultDiv function
+const toggleSearchResultDiv = displayStyle =>{
+    document.getElementById('count-div').style.display = displayStyle;
+}
+const toggleSearchResult = displayStyle =>{
+    document.getElementById('count').style.display = displayStyle;
+}
 // search btn function
 const loadBook = () => {
     const searchField = searchInput.value;
@@ -19,19 +26,23 @@ const loadBook = () => {
     }
     // show spinner 
     toggleSpinner('block');
+    toggleSearchResultDiv('none');
+    toggleSearchResult('none');
     // clear data 
+    countData.innerHTML = "";
     bookContainer.innerHTML = "";
     searchInput.value = "";
     const url = `http://openlibrary.org/search.json?q=${searchField}`;
     fetch(url)
     .then(res => res.json())
-    .then(data => displayBook(data.docs))
+    .then(data => displayBook(data, data.docs))
 }
 //display data
-const displayBook = books => {
+const displayBook = (data , books) => {
     const count = books.length;
-    countData.innerHTML = `Show Result : ${count}`;
-    console.log(books)
+    const AllBookCount = data.numFound;
+    countData.innerHTML = `<span class="fw-bold text-info fs-5">Showing : ${AllBookCount} OF ${count} Found Result</span>`;
+    // error handaling
     if(books.length === 0){
         errorMessage.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong> No Result Found !</strong>
@@ -41,6 +52,7 @@ const displayBook = books => {
     else{
         errorMessage.innerHTML = "";
     }
+    // foreach loop
     books.forEach(book => {
         console.log(book);
         const imgUrl = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
@@ -48,21 +60,17 @@ const displayBook = books => {
         div.classList.add('col');
         div.innerHTML = `
         <div class="card h-100">
-           <img src="${imgUrl ? imgUrl : 'Not Avaible'}" class="card-img-top" style="height:300px" alt="${book.title}" />
-            <h6 class="card-title p-3"><span class="fw-bold">Name:</span> ${book.title}</h6>
+           <img src="${imgUrl ? imgUrl : ''}" class="card-img-top" style="height:300px" alt="${book.title}" />
+            <h6 class="card-title p-3"><span class="fw-bold text-info fs-5">Name :</span> ${book.title}</h6>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item"><span class="fw-bold">Author:</span> ${book.author_name}</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item" style = "font-size:1rem; font-weight:500"><span class="fw-bold text-info fs-5">Author :</span> ${book.author_name}</li>
+                <li class="list-group-item" style = "font-size:1rem; font-weight:500"><span class="fw-bold text-info fs-5">Publisher :</span> ${book.publisher ? book.publisher : 'N/A'}</li>
+                <li class="list-group-item" style = "font-size:1rem; font-weight:500"><span class="fw-bold text-info fs-5">First Publish Year :</span> ${book.first_publish_year ? book.first_publish_year : 'N/A'}</li>
             </ul>
-            <div class="card-footer">
-                
-            </div>
         </div>`;
         bookContainer.appendChild(div);
     });
     toggleSpinner('none');
-}
-const displayImg = img =>{
-            
+    toggleSearchResultDiv('block')
+    toggleSearchResult('block');
 }

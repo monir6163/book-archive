@@ -17,8 +17,14 @@ const toggleSearchResult = displayStyle =>{
 // search btn function
 const loadBook = () => {
     const searchField = searchInput.value;
+    // clear data 
+    countData.innerHTML = "";
+    bookContainer.innerHTML = "";
+    searchInput.value = "";
+    errorMessage.innerHTML = "";
     // error handaling
     if(searchField === ""){
+        toggleSearchResultDiv('none');
         errorMessage.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Please input Your Book Name!</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -29,11 +35,6 @@ const loadBook = () => {
     toggleSpinner('block');
     toggleSearchResultDiv('none');
     toggleSearchResult('none');
-    // clear data 
-    countData.innerHTML = "";
-    bookContainer.innerHTML = "";
-    searchInput.value = "";
-    errorMessage.innerHTML = "";
     const url = `https://openlibrary.org/search.json?q=${searchField}`;
     fetch(url)
     .then(res => res.json())
@@ -50,6 +51,9 @@ const displayBook = (data , books) => {
         <strong> No Result Found !</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>`;
+    }else if(books.length > 0){
+     toggleSearchResultDiv('block');
+     toggleSearchResult('none');
     }
     // foreach loop
     books.forEach(book => {
@@ -69,6 +73,5 @@ const displayBook = (data , books) => {
         bookContainer.appendChild(div);
     });
     toggleSpinner('none');
-    toggleSearchResultDiv('block')
     toggleSearchResult('block');
 }

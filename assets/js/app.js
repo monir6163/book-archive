@@ -33,6 +33,7 @@ const loadBook = () => {
     countData.innerHTML = "";
     bookContainer.innerHTML = "";
     searchInput.value = "";
+    errorMessage.innerHTML = "";
     const url = `https://openlibrary.org/search.json?q=${searchField}`;
     fetch(url)
     .then(res => res.json())
@@ -49,9 +50,6 @@ const displayBook = (data , books) => {
         <strong> No Result Found !</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>`;
-    }
-    else{
-        errorMessage.innerHTML = "";
     }
     // foreach loop
     books.forEach(book => {
